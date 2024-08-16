@@ -2,6 +2,8 @@
 import Base from "../layout/Base.astro";
 import { supabase } from "../lib/supabase";
 import { Reviews, type GuestbookEntry } from "../components/Reviews";
+import Game from "../components/game.astro"
+import Button from "../components/Button";
 
 const { email } = Astro.locals;
 
@@ -18,6 +20,7 @@ const { data } = (await supabase
     >
       {email}
     </p>
+    <Button client:load />
     <p class="max-w-prose text-lg mb-2 dark:text-zinc-100">
       This is a protected page. You can only see this if you are logged in.
     </p>
@@ -26,6 +29,6 @@ const { data } = (await supabase
       class="mb-10 bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 px-3 py-1 rounded-md"
       >Sign out</a
     >
-    <Reviews reviews={data} client:idle />
+    <!-- <Reviews reviews={data} client:idle /> -->
   </section>
 </Base>

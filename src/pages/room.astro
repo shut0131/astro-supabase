@@ -1,0 +1,31 @@
+---
+import Base from "../layout/Base.astro";
+import HutatuNoSinjituHitotuNoUso from "../react/hutatu-no-sinjitu-hitotu-no-uso";
+import JumonDeSuiri from "../react/jumon-de-suiri";
+
+const recreation_id = Astro.url.searchParams.get('recreation_id');
+const room_id = Astro.url.searchParams.get('room_id');
+
+if (!recreation_id || !room_id) {
+  return Astro.redirect('/404');
+}
+
+
+
+const title = `レクリエーションルーム ${room_id}`;
+
+
+---
+
+<Base title={title}>
+  <main class="flex-1 flex flex-col gap-4 items-center p-4 justify-center">
+    <h1 class="text-2xl font-bold mb-4">{title}</h1>
+    {recreation_id === '1' ? (
+      <HutatuNoSinjituHitotuNoUso roomId={room_id} client:only="react"/>
+    ) : recreation_id === '2' ? (
+      <JumonDeSuiri roomId={room_id} client:only="react"/>
+    ) : (
+      <p>無効なレクリエーションIDです。</p>
+    )}
+  </main>
+</Base>

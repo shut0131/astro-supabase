@@ -1,14 +1,20 @@
 import { defineMiddleware } from "astro:middleware";
 import { supabase } from "../lib/supabase";
-import micromatch from "micromatch";
 
-const protectedRoutes = ["/dashboard(|/)"];
-const redirectRoutes = ["/signin(|/)", "/register(|/)"];
-const proptectedAPIRoutes = ["/api/guestbook(|/)"];
+const protectedRoutes = ["/dashboard"];
+const redirectRoutes = ["/signin", "/register"];
+const proptectedAPIRoutes = ["/api/guestbook"];
+
+function isMatch(pathname: string, patterns: string[]): boolean {
+  return patterns.some(pattern => {
+    const regex = new RegExp(`^${pattern}(\/)?$`);
+    return regex.test(pathname);
+  });
+}
 
 export const onRequest = defineMiddleware(
   async ({ locals, url, cookies, redirect }, next) => {
-    if (micromatch.isMatch(url.pathname, protectedRoutes)) {
+    if (isMatch(url.pathname, protectedRoutes)) {
       const accessToken = cookies.get("sb-access-token");
       const refreshToken = cookies.get("sb-refresh-token");
 
@@ -44,7 +50,7 @@ export const onRequest = defineMiddleware(
       });
     }
 
-    if (micromatch.isMatch(url.pathname, redirectRoutes)) {
+    if (isMatch(url.pathname, redirectRoutes)) {
       const accessToken = cookies.get("sb-access-token");
       const refreshToken = cookies.get("sb-refresh-token");
 
@@ -53,7 +59,7 @@ export const onRequest = defineMiddleware(
       }
     }
 
-    if (micromatch.isMatch(url.pathname, proptectedAPIRoutes)) {
+    if (isMatch(url.pathname, proptectedAPIRoutes)) {
       const accessToken = cookies.get("sb-access-token");
       const refreshToken = cookies.get("sb-refresh-token");
 
